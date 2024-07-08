@@ -1,6 +1,6 @@
 import { useState } from "react";
-import MyMap from "../../atom/maps/MyMap";
-import Search from "../../organisms/Search/Search";
+import MyMap from "../atom/maps/MyMap";
+import Search from "../organisms/Search/Search";
 
 interface Store {
   storeId: number;
