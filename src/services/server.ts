@@ -30,6 +30,57 @@ const executeQuery = async (query: string, params: any[], res: Response) => {
   }
 };
 
+app.post("/api/signup", async (req: Request, res: Response) => {
+  const { name, id, pwd, email, phoneNumber } = req.body;
+
+  try {
+    console.log("Received signup request:", { name, id, email, phoneNumber });
+
+    // 아이디 중복 체크
+    const [rows] = await connection.execute(
+      "SELECT COUNT(*) as count FROM users WHERE username = ?",
+      [id]
+    );
+    const count = (rows as any)[0].count;
+    if (count > 0) {
+      console.log("Username already exists");
+      return res.status(400).json({ error: "아이디가 이미 존재합니다." });
+    }
+
+    // 유저 등록
+    await connection.execute(
+      "INSERT INTO users (name, username, pwd, email, phone) VALUES (?, ?, ?, ?, ?)",
+      [name, id, pwd, email, phoneNumber]
+    );
+
+    console.log("User registered successfully");
+    res.status(201).json({ message: "회원가입 성공" });
+  } catch (err) {
+    console.error("Error during signup:", err);
+    res.status(500).json({ error: "내부 서버 오류" });
+  }
+});
+
+app.post("/api/login", async (req: Request, res: Response) => {
+  const { id, pwd } = req.body;
+
+  try {
+    const [rows] = await connection.execute(
+      "SELECT * FROM users WHERE username = ? AND pwd = ?",
+      [id, pwd]
+    );
+
+    if ((rows as any).length > 0) {
+      res.status(200).json({ message: "로그인 성공" });
+    } else {
+      res.status(401).json({ error: "아이디 또는 비밀번호가 잘못되었습니다." });
+    }
+  } catch (err) {
+    console.error("로그인 중 오류 발생:", err);
+    res.status(500).json({ error: "내부 서버 오류" });
+  }
+});
+
 // mapPage에 정보 불러오기
 app.get("/search", (req: Request, res: Response) => {
   const { query } = req.query;

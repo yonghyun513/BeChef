@@ -4,6 +4,8 @@ import Button from "../../atom/Button/Button";
 import HeaderSection from "../HeaderSection/HeaderSection";
 
 interface SearchSectionProps {
+  type: string;
+  placeholder: string;
   query: string;
   setQuery: (query: string) => void;
   handleSearch: () => void;
@@ -15,11 +17,15 @@ const SearchSection: React.FC<SearchSectionProps> = ({
   setQuery,
   handleSearch,
   handleKeyPress,
+  type,
+  placeholder,
 }) => {
   return (
     <div className="p-4 border-b-2">
       <div className="flex">
         <Input
+          type={type}
+          placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}

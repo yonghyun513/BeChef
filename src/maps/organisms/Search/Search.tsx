@@ -48,6 +48,8 @@ const Search: React.FC<SearchProps> = ({ setResults }) => {
       <HeaderSection /> {/* 헤더 섹션 */}
       <div className="p-4">
         <SearchSection
+          type="text"
+          placeholder="입력"
           query={query}
           setQuery={setQuery}
           handleSearch={handleSearch}
